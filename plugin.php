@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: WP REST API
- * Description: JSON-based REST API for WordPress, originally developed as part of GSoC 2013.
+ * Plugin Name: WP REST API - Hacked By thruthesky
+ * Description: Attention: This is a hacked version of WP REST API
  * Author: WP REST API Team
  * Author URI: http://v2.wp-api.org
  * Version: 2.0-beta13

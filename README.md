@@ -1,5 +1,7 @@
 # WP REST API v2.0 (WP-API)
 
+* NOTE: This is hacked by thruthesky
+
 Access your WordPress site's data through an easy-to-use HTTP REST API.
 
 [![Build Status](https://travis-ci.org/WP-API/WP-API.svg?branch=develop)](https://travis-ci.org/WP-API/WP-API)
