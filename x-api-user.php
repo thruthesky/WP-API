@@ -31,12 +31,11 @@ class XUser extends WP_User {
                 wp_send_json_error("Wrong User ID. There is no user by - $_REQUEST[user_login]");
             }
         }
-        else {
-
-        }
         wp_set_current_user( $user->ID );
 
-        wp_send_json_success( $this->get_session_id( $user ) );
+        // wp_send_json_success( $this->get_session_id( $user ) );
+
+        wp_send_json_success( $this->userResponse( $user ) );
 
     }
 
@@ -118,15 +117,17 @@ class XUser extends WP_User {
 
 
         $user = new WP_User( $user_id );
+        wp_send_json_success( $this->userResponse( $user ) );
 
-        $ud = [
+    }
+
+    private function userResponse( $user ) {
+        return [
             'user_login' => $user->user_login,
             'user_email' => $user->user_email,
             'user_nicename' => $user->user_nicename,
             'session_id' => $this->get_session_id( $user )
         ];
-        wp_send_json_success( $ud );
-
     }
 
 
