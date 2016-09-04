@@ -2,6 +2,20 @@
 
 * NOTE: This is hacked by thruthesky
 
+* Post write
+
+http://work.org/wordpress/wp-json/?xapi=post.insert&post_category=713&post_title=Post%20from%20new%20api&post_content=This%20is%20the%20content&mobile=01974678603
+
+
+* Post list by page
+
+http://work.org/wordpress/wp-json/?xapi=post.page&paged=1&cat=713
+
+
+
+
+## Original Documentation
+
 Access your WordPress site's data through an easy-to-use HTTP REST API.
 
 [![Build Status](https://travis-ci.org/WP-API/WP-API.svg?branch=develop)](https://travis-ci.org/WP-API/WP-API)

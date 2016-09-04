@@ -25,10 +25,12 @@ class XUser extends WP_User {
         if ( is_wp_error( $user ) ) {
             $user = get_user_by('login', $_REQUEST['user_login']);
             if ( $user ) {
-                wp_send_json_error("Wrong Password. Password is incorrect - $_REQUEST[user_pass]");
+                //wp_send_json_error("Wrong Password. Password is incorrect - $_REQUEST[user_pass]");
+                wp_send_json_error("wrong-password");
             }
             else {
-                wp_send_json_error("Wrong User ID. There is no user by - $_REQUEST[user_login]");
+                //wp_send_json_error("Wrong User ID. There is no user by - $_REQUEST[user_login]");
+                wp_send_json_error("wrong-id");
             }
         }
         wp_set_current_user( $user->ID );
@@ -95,7 +97,7 @@ class XUser extends WP_User {
     }
     public function create() {
         $user_id = wp_insert_user( $this->userdata );
-        if ( is_wp_error( $user_id ) ) wp_send_json_error( $user_id );
+        if ( is_wp_error( $user_id ) ) wp_send_json_error( xerror($user_id) );
         return $user_id;
     }
 

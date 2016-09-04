@@ -8,7 +8,7 @@
  * Plugin URI: https://github.com/WP-API/WP-API
  * License: GPL2+
  */
-if ( isset( $_REQUEST['xapi'] ) ) {
+if ( isset( $_REQUEST['xapi'] ) || isset( $_REQUEST['session_id'] ) ) {
     require_once dirname( __FILE__ ) . '/x-api.php';
 }
 /**
