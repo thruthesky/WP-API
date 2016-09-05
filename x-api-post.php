@@ -67,8 +67,10 @@ class XPost {
     public function insert() {
 
         $this->check_insert_input();
+        $category = get_category_by_slug($_REQUEST['category']);
+        if ( $category === false ) wp_send_json_error( 'category does not exists' );
         $this
-            ->set('post_category', [ $_REQUEST['category'] ])
+            ->set('post_category', [ $category->term_id ])
             ->set('post_title', $_REQUEST['title'])
             ->set('post_content', $_REQUEST['content'])
             ->set('post_status', 'publish');
@@ -174,12 +176,13 @@ class XPost {
      */
     public function page() {
         $this->check_page_input();
+        $category = get_category_by_slug( in('category') );
+        if ( $category === false ) wp_send_json_error( 'category does not exists' );
         $args = [
-            'cat' => $_REQUEST['cat'],
+            'category' => $category->term_id,
             'posts_per_page' => in('posts_per_page', 10),
             'paged' => in('paged'),
         ];
-        $category = get_the_category_by_ID( $_REQUEST['cat'] );
         $posts = get_posts($args);
         $comment = new XComment();
         foreach( $posts as $post ) {
@@ -217,7 +220,7 @@ class XPost {
 
     private function check_page_input()
     {
-        $keys = [ 'cat', 'paged' ];
+        $keys = [ 'category', 'paged' ];
         foreach ( $keys as $k ) {
             if ( ! isset( $_REQUEST[$k] ) || empty( $_REQUEST[$k] ) ) {
                 wp_send_json_error( "$k is not provided" );
