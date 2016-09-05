@@ -21,6 +21,23 @@ function xapi_get_query_vars() {
 
 
 
+function isValidJSON($str) {
+    json_decode($str);
+    return json_last_error() == JSON_ERROR_NONE;
+}
+
+
+function xapi_get_json_post() {
+    $json_params = file_get_contents( "php://input" );
+    if ( strlen($json_params) > 0 ) {
+        $dec = json_decode( $json_params, true );
+        if ( json_last_error() == JSON_ERROR_NONE ) {
+            return $dec;
+        }
+    }
+    return null;
+}
+
 
 if ( ! function_exists('in') ) {
     /**

@@ -68,9 +68,9 @@ class XPost {
 
         $this->check_insert_input();
         $this
-            ->set('post_category', [ $_REQUEST['post_category'] ])
-            ->set('post_title', $_REQUEST['post_title'])
-            ->set('post_content', $_REQUEST['post_content'])
+            ->set('post_category', [ $_REQUEST['category'] ])
+            ->set('post_title', $_REQUEST['title'])
+            ->set('post_content', $_REQUEST['content'])
             ->set('post_status', 'publish');
 
         if ( is_user_logged_in() ) {
@@ -206,10 +206,10 @@ class XPost {
 
     private function check_insert_input()
     {
-        $keys = [ 'post_category', 'post_title', 'post_content' ];
+        $keys = [ 'category', 'title', 'content' ];
         foreach ( $keys as $k ) {
             if ( ! isset( $_REQUEST[$k] ) || empty( $_REQUEST[$k] ) ) {
-                wp_send_json_error( "$k is not provides" );
+                wp_send_json_error( "$k is not provided. _REQUEST: " . json_encode( $_REQUEST ));
             }
         }
 
@@ -220,7 +220,7 @@ class XPost {
         $keys = [ 'cat', 'paged' ];
         foreach ( $keys as $k ) {
             if ( ! isset( $_REQUEST[$k] ) || empty( $_REQUEST[$k] ) ) {
-                wp_send_json_error( "$k is not provides" );
+                wp_send_json_error( "$k is not provided" );
             }
         }
 
