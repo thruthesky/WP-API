@@ -102,7 +102,7 @@ class XPost {
     {
         foreach ( $_REQUEST as $k => $v ) {
             if ( in_array( $k, self::$post_fields ) ) continue;
-            if ( in_array( $k, xapi_get_query_vars() ) ) continue;
+            if ( in_array( $k, xapi_post_query_vars() ) ) continue;
             $this->meta($k, $v );
         }
     }

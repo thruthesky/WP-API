@@ -16,8 +16,12 @@ function xerror( $thing ) {
 }
 
 function xapi_get_query_vars() {
-    return ['xapi', 'session_id', 'post_category'];
+    return ['xapi', 'session_id'];
 }
+function xapi_post_query_vars() {
+    return ['xapi', 'session_id', 'category', 'title', 'content'];
+}
+
 
 
 
