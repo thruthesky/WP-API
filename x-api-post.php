@@ -63,9 +63,11 @@ class XPost {
 
     /**
      *
+     *
+     * @attention it gets 'file_id' as attachment id and set the parent of the attachment to this post.
      */
     public function insert() {
-
+        xlog( $_REQUEST );
         $this->check_insert_input();
         $category = get_category_by_slug($_REQUEST['category']);
         if ( $category === false ) wp_send_json_error( 'category does not exists' );
@@ -83,6 +85,13 @@ class XPost {
         if ( is_wp_error( $post_ID ) ) wp_send_json_error( xerror( $post_ID ) );
         self::load( $post_ID );
         $this->saveMeta();
+
+        if ( isset( $_REQUEST['file_id'] ) && $_REQUEST['file_id'] ) {
+            $data = [ 'ID' => $_REQUEST['file_id'], 'post_parent' => $post_ID ];
+            $attach_id = @wp_update_post( $data );
+            if ( $attach_id == 0 || is_wp_error( $attach_id ) ) wp_send_json_error( xerror( $attach_id ) );
+
+        }
         wp_send_json_success( $post_ID );
     }
 
@@ -183,18 +192,37 @@ class XPost {
             'posts_per_page' => in('posts_per_page', 10),
             'paged' => in('paged'),
         ];
-        $posts = get_posts($args);
+        $_posts = get_posts($args);
+        $posts = [];
         $comment = new XComment();
-        foreach( $posts as $post ) {
-            if ( $post->post_author ) {
-                $user = get_user_by('id', $post->post_author);
-                $post->author_name = $user->user_nicename;
+        foreach( $_posts as $_post ) {
+            $post = [];
+            $post['ID'] = $_post->ID;
+            $post['post_title'] = $_post->post_title;
+            $post['post_content'] = $_post->post_content;
+            $post['date'] = $_post->post_date;
+            if ( $_post->post_author ) {
+                $user = get_user_by('id', $_post->post_author);
+                $author_name = $user->user_nicename;
+                $post[ 'author_name' ] = $author_name;
             }
-            $meta = get_post_meta( $post->ID );
+
+
+            $post['meta'] = get_post_meta( $_post->ID );
+            /*
             foreach( $meta as $k => $arr ) {
                 $post->$k = $arr[0];
+            }*/
+
+            $post['comments'] = $comment->get_nested_comments_with_meta( $_post->ID );
+            $images = get_attached_media( 'image', $_post->ID );
+            if ( $images ) {
+                $post['images'] = [];
+                foreach ( $images as $image ) {
+                    $post['images'][] = $image->guid;
+                }
             }
-            $post->comments = $comment->get_nested_comments_with_meta( $post->ID );
+            $posts[] = $post;
         }
         wp_send_json_success( [
             '_REQUEST' => $_REQUEST,
@@ -204,15 +232,18 @@ class XPost {
     }
 
 
-
-
-
+    /**
+     * @doc when there is any key which has no value, it will display error message with : "EMPTY:key"
+     */
     private function check_insert_input()
     {
-        $keys = [ 'category', 'title', 'content' ];
+        $keys = [
+            'category', 'title', 'content',
+            'first_name',
+        ];
         foreach ( $keys as $k ) {
             if ( ! isset( $_REQUEST[$k] ) || empty( $_REQUEST[$k] ) ) {
-                wp_send_json_error( "$k is not provided. _REQUEST: " . json_encode( $_REQUEST ));
+                wp_send_json_error( "EMPTY:$k" );
             }
         }
 
@@ -226,6 +257,5 @@ class XPost {
                 wp_send_json_error( "$k is not provided" );
             }
         }
-
     }
 }

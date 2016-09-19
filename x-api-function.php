@@ -58,3 +58,37 @@ if ( ! function_exists('in') ) {
         else return $default;
     }
 }
+
+if ( ! function_exists( 'xlog' ) ) {
+
+
+    /**
+     * Leaves a log message on WordPress log file on when the debug mode is enabled on WordPress. ( wp-content/debug.log )
+     *
+     * @param $message
+     */
+    function xlog( $message ) {
+        static $count_log = 0;
+        $count_log ++;
+        if( WP_DEBUG === true ){
+            if( is_array( $message ) || is_object( $message ) ){
+                $message = print_r( $message, true );
+            }
+            else {
+
+            }
+        }
+        $message = "[$count_log] $message";
+        error_log( $message ); //
+    }
+
+
+}
+
+
+function xapi_get_safe_filename($filename) {
+    $pi = pathinfo($filename);
+    $sanitized = md5($pi['filename'] . ' ' . $_SERVER['REMOTE_ADDR'] . ' ' . time());
+    if ( isset($pi['extension']) && $pi['extension'] ) return $sanitized . '.' . $pi['extension'];
+    else return $sanitized;
+}
